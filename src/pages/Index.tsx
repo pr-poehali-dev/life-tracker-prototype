@@ -38,6 +38,7 @@ export default function Index() {
   today.setHours(0, 0, 0, 0);
 
   const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const [calendarView, setCalendarView] = useState<'week' | 'month'>('month');
   const [tasks, setTasks] = useState<Task[]>([
     { id: '1', title: 'Позвонить родителям', category: 'family', completed: true, isHabit: false, date: today },
     { id: '2', title: 'Утренняя зарядка', category: 'growth', completed: true, isHabit: true, streak: 5, daysTotal: 30, date: today },
@@ -103,6 +104,31 @@ export default function Index() {
     return tasks.map(task => task.date);
   };
 
+  const getWeekStart = (date: Date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  };
+
+  const getWeekEnd = (date: Date) => {
+    const start = getWeekStart(date);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    return end;
+  };
+
+  const getWeekDays = (date: Date) => {
+    const start = getWeekStart(date);
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(start);
+      day.setDate(start.getDate() + i);
+      days.push(day);
+    }
+    return days;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -127,23 +153,107 @@ export default function Index() {
 
           <TabsContent value="tasks" className="space-y-4">
             <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
-              <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
-                <Icon name="Calendar" size={24} />
-                Календарь
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
+                  <Icon name="Calendar" size={24} />
+                  Календарь
+                </h2>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant={calendarView === 'week' ? 'default' : 'outline'}
+                    onClick={() => setCalendarView('week')}
+                    className={calendarView === 'week' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'border-slate-600 text-slate-300'}
+                  >
+                    Неделя
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={calendarView === 'month' ? 'default' : 'outline'}
+                    onClick={() => setCalendarView('month')}
+                    className={calendarView === 'month' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'border-slate-600 text-slate-300'}
+                  >
+                    Месяц
+                  </Button>
+                </div>
+              </div>
               <div className="flex justify-center mb-4">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  className="rounded-md border border-slate-700 bg-slate-900/50"
-                  modifiers={{
-                    hasTasks: getDatesWithTasks()
-                  }}
-                  modifiersClassNames={{
-                    hasTasks: 'bg-purple-500/30 font-bold'
-                  }}
-                />
+                {calendarView === 'month' ? (
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => date && setSelectedDate(date)}
+                    className="rounded-md border border-slate-700 bg-slate-900/50"
+                    modifiers={{
+                      hasTasks: getDatesWithTasks()
+                    }}
+                    modifiersClassNames={{
+                      hasTasks: 'bg-purple-500/30 font-bold'
+                    }}
+                  />
+                ) : (
+                  <div className="w-full">
+                    <div className="flex items-center justify-between mb-4">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => {
+                          const newDate = new Date(selectedDate);
+                          newDate.setDate(newDate.getDate() - 7);
+                          setSelectedDate(newDate);
+                        }}
+                        className="text-slate-300 hover:text-white"
+                      >
+                        <Icon name="ChevronLeft" size={24} />
+                      </Button>
+                      <h3 className="text-lg font-semibold text-slate-200">
+                        {formatDate(getWeekStart(selectedDate))} — {formatDate(getWeekEnd(selectedDate))}
+                      </h3>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => {
+                          const newDate = new Date(selectedDate);
+                          newDate.setDate(newDate.getDate() + 7);
+                          setSelectedDate(newDate);
+                        }}
+                        className="text-slate-300 hover:text-white"
+                      >
+                        <Icon name="ChevronRight" size={24} />
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-7 gap-2">
+                      {getWeekDays(selectedDate).map((day, index) => {
+                        const isSelected = isSameDay(day, selectedDate);
+                        const hasTasks = getTasksForDate(day).length > 0;
+                        const isToday = isSameDay(day, today);
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedDate(day)}
+                            className={`p-4 rounded-xl text-center transition-all duration-300 hover:scale-105 ${
+                              isSelected
+                                ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white shadow-lg'
+                                : hasTasks
+                                ? 'bg-purple-500/20 border border-purple-500/50 text-slate-200'
+                                : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50'
+                            } ${isToday ? 'ring-2 ring-cyan-400' : ''}`}
+                          >
+                            <div className="text-xs mb-1 font-medium">
+                              {day.toLocaleDateString('ru-RU', { weekday: 'short' })}
+                            </div>
+                            <div className="text-2xl font-bold">{day.getDate()}</div>
+                            {hasTasks && !isSelected && (
+                              <div className="mt-1 flex justify-center">
+                                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="text-center text-slate-300 mb-4">
                 <p className="text-lg">Выбрана дата: <span className="font-bold text-purple-400">{formatDate(selectedDate)}</span></p>
