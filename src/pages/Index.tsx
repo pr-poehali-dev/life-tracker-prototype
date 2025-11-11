@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Calendar } from '@/components/ui/calendar';
 
 type Category = 'family' | 'career' | 'growth' | 'leisure' | 'friends';
 
@@ -19,6 +20,7 @@ interface Task {
   category: Category;
   completed: boolean;
   isHabit: boolean;
+  date: Date;
   streak?: number;
   daysTotal?: number;
 }
@@ -32,10 +34,14 @@ const categories = {
 };
 
 export default function Index() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: 'Позвонить родителям', category: 'family', completed: true, isHabit: false },
-    { id: '2', title: 'Утренняя зарядка', category: 'growth', completed: true, isHabit: true, streak: 5, daysTotal: 30 },
-    { id: '3', title: 'Закончить проект', category: 'career', completed: false, isHabit: false },
+    { id: '1', title: 'Позвонить родителям', category: 'family', completed: true, isHabit: false, date: today },
+    { id: '2', title: 'Утренняя зарядка', category: 'growth', completed: true, isHabit: true, streak: 5, daysTotal: 30, date: today },
+    { id: '3', title: 'Закончить проект', category: 'career', completed: false, isHabit: false, date: today },
   ]);
   
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -53,6 +59,7 @@ export default function Index() {
       category: selectedCategory,
       completed: false,
       isHabit: isHabit,
+      date: selectedDate,
       ...(isHabit && { streak: 0, daysTotal: habitDays })
     };
     
@@ -73,28 +80,28 @@ export default function Index() {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
-  const getCategoryStats = () => {
-    const stats: Record<Category, { total: number; completed: number }> = {
-      family: { total: 0, completed: 0 },
-      career: { total: 0, completed: 0 },
-      growth: { total: 0, completed: 0 },
-      leisure: { total: 0, completed: 0 },
-      friends: { total: 0, completed: 0 },
-    };
-
-    tasks.forEach(task => {
-      stats[task.category].total++;
-      if (task.completed) {
-        stats[task.category].completed++;
-      }
-    });
-
-    return stats;
+  const isSameDay = (date1: Date, date2: Date) => {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
   };
 
-  const stats = getCategoryStats();
-  const habits = tasks.filter(t => t.isHabit);
-  const regularTasks = tasks.filter(t => !t.isHabit);
+  const getTasksForDate = (date: Date) => {
+    return tasks.filter(task => isSameDay(task.date, date));
+  };
+
+  const tasksForSelectedDate = getTasksForDate(selectedDate);
+  const habits = tasksForSelectedDate.filter(t => t.isHabit);
+  const regularTasks = tasksForSelectedDate.filter(t => !t.isHabit);
+
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('ru-RU', options);
+  };
+
+  const getDatesWithTasks = () => {
+    return tasks.map(task => task.date);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
@@ -119,6 +126,30 @@ export default function Index() {
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-4">
+            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
+              <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
+                <Icon name="Calendar" size={24} />
+                Календарь
+              </h2>
+              <div className="flex justify-center mb-4">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => date && setSelectedDate(date)}
+                  className="rounded-md border border-slate-700 bg-slate-900/50"
+                  modifiers={{
+                    hasTasks: getDatesWithTasks()
+                  }}
+                  modifiersClassNames={{
+                    hasTasks: 'bg-purple-500/30 font-bold'
+                  }}
+                />
+              </div>
+              <div className="text-center text-slate-300 mb-4">
+                <p className="text-lg">Выбрана дата: <span className="font-bold text-purple-400">{formatDate(selectedDate)}</span></p>
+              </div>
+            </Card>
+
             <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
               <div className="flex gap-3 mb-4">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -204,7 +235,7 @@ export default function Index() {
                 {regularTasks.length === 0 ? (
                   <div className="text-center py-12 text-slate-400">
                     <Icon name="Inbox" size={48} className="mx-auto mb-4 opacity-50" />
-                    <p>Нет задач. Добавьте первую!</p>
+                    <p>Нет задач на выбранную дату. Добавьте первую!</p>
                   </div>
                 ) : (
                   regularTasks.map((task) => {
@@ -247,37 +278,6 @@ export default function Index() {
                 )}
               </div>
             </Card>
-
-            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
-              <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Баланс категорий
-              </h2>
-              <div className="space-y-6">
-                {Object.entries(categories).map(([key, cat]) => {
-                  const categoryKey = key as Category;
-                  const stat = stats[categoryKey];
-                  const percentage = stat.total > 0 ? (stat.completed / stat.total) * 100 : 0;
-                  
-                  return (
-                    <div key={key} className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Icon name={cat.icon as any} size={20} />
-                          <span className="font-medium">{cat.label}</span>
-                        </div>
-                        <span className="text-sm text-slate-400">
-                          {stat.completed}/{stat.total}
-                        </span>
-                      </div>
-                      <Progress 
-                        value={percentage} 
-                        className={`h-3 bg-slate-700`}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
           </TabsContent>
 
           <TabsContent value="habits" className="space-y-4">
@@ -291,7 +291,7 @@ export default function Index() {
                 {habits.length === 0 ? (
                   <div className="text-center py-12 text-slate-400">
                     <Icon name="Calendar" size={48} className="mx-auto mb-4 opacity-50" />
-                    <p>Нет привычек. Создайте первую в трекере дел!</p>
+                    <p>Нет привычек на выбранную дату. Создайте первую в трекере дел!</p>
                   </div>
                 ) : (
                   habits.map((habit) => {
