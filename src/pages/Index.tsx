@@ -50,6 +50,8 @@ export default function Index() {
   const [isHabit, setIsHabit] = useState(false);
   const [habitDays, setHabitDays] = useState(7);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isHabitDialogOpen, setIsHabitDialogOpen] = useState(false);
+  const [habitStartDate, setHabitStartDate] = useState<Date>(today);
 
   const addTask = () => {
     if (!newTaskTitle.trim()) return;
@@ -67,6 +69,33 @@ export default function Index() {
     setTasks([...tasks, newTask]);
     setNewTaskTitle('');
     setIsDialogOpen(false);
+  };
+
+  const addHabit = () => {
+    if (!newTaskTitle.trim()) return;
+    
+    const newTasks: Task[] = [];
+    const startDate = new Date(habitStartDate);
+    
+    for (let i = 0; i < habitDays; i++) {
+      const taskDate = new Date(startDate);
+      taskDate.setDate(startDate.getDate() + i);
+      
+      newTasks.push({
+        id: `${Date.now()}-${i}`,
+        title: newTaskTitle,
+        category: selectedCategory,
+        completed: false,
+        isHabit: true,
+        date: taskDate,
+        streak: 0,
+        daysTotal: habitDays
+      });
+    }
+    
+    setTasks([...tasks, ...newTasks]);
+    setNewTaskTitle('');
+    setIsHabitDialogOpen(false);
   };
 
   const toggleTask = (id: string) => {
@@ -392,10 +421,93 @@ export default function Index() {
 
           <TabsContent value="habits" className="space-y-4">
             <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
-              <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
-                <Icon name="Target" size={28} />
-                Мои привычки
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
+                  <Icon name="Target" size={28} />
+                  Мои привычки
+                </h2>
+                <Dialog open={isHabitDialogOpen} onOpenChange={setIsHabitDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-105">
+                      <Icon name="Plus" size={20} className="mr-2" />
+                      Новая привычка
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-slate-800 border-slate-700 max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        Создать привычку
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <Label htmlFor="habit-title">Название привычки</Label>
+                        <Input
+                          id="habit-title"
+                          value={newTaskTitle}
+                          onChange={(e) => setNewTaskTitle(e.target.value)}
+                          placeholder="Например: Утренняя зарядка"
+                          className="bg-slate-900 border-slate-700 mt-2"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label>Категория</Label>
+                        <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as Category)}>
+                          <SelectTrigger className="bg-slate-900 border-slate-700 mt-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-slate-800 border-slate-700">
+                            {Object.entries(categories).map(([key, cat]) => (
+                              <SelectItem key={key} value={key}>
+                                <div className="flex items-center gap-2">
+                                  <Icon name={cat.icon as any} size={16} />
+                                  {cat.label}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label>Дата начала</Label>
+                        <div className="mt-2 flex justify-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+                          <Calendar
+                            mode="single"
+                            selected={habitStartDate}
+                            onSelect={(date) => date && setHabitStartDate(date)}
+                            className="rounded-md"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="habit-days">Количество дней</Label>
+                        <Input
+                          id="habit-days"
+                          type="number"
+                          min="1"
+                          max="365"
+                          value={habitDays}
+                          onChange={(e) => setHabitDays(Number(e.target.value))}
+                          className="bg-slate-900 border-slate-700 mt-2"
+                        />
+                        <p className="text-xs text-slate-400 mt-1">
+                          Привычка будет создана на {habitDays} {habitDays === 1 ? 'день' : habitDays < 5 ? 'дня' : 'дней'} начиная с {formatDate(habitStartDate)}
+                        </p>
+                      </div>
+
+                      <Button
+                        onClick={addHabit}
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                      >
+                        Создать привычку
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
               
               <div className="space-y-4">
                 {habits.length === 0 ? (
