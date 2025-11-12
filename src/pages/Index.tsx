@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
-import { useNavigate } from 'react-router-dom';
+
 
 type Category = 'family' | 'career' | 'growth' | 'leisure' | 'friends';
 
@@ -34,8 +34,12 @@ const categories = {
   friends: { label: 'Друзья', icon: 'Users', color: 'from-green-500 to-emerald-500' },
 };
 
+interface MonthlySnapshot {
+  month: string;
+  areas: Record<Category, number>;
+}
+
 export default function Index() {
-  const navigate = useNavigate();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -54,6 +58,8 @@ export default function Index() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHabitDialogOpen, setIsHabitDialogOpen] = useState(false);
   const [habitStartDate, setHabitStartDate] = useState<Date>(today);
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
+  const [monthlyHistory, setMonthlyHistory] = useState<MonthlySnapshot[]>([]);
 
   const addTask = () => {
     if (!newTaskTitle.trim()) return;
@@ -71,6 +77,71 @@ export default function Index() {
     setTasks([...tasks, newTask]);
     setNewTaskTitle('');
     setIsDialogOpen(false);
+  };
+
+  const calculateCategoryScore = (category: Category, monthOffset: number = 0): number => {
+    const targetDate = new Date(today);
+    targetDate.setMonth(targetDate.getMonth() - monthOffset);
+    const startOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+    const endOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
+    
+    const categoryTasks = tasks.filter(t => 
+      t.category === category && 
+      t.date >= startOfMonth && 
+      t.date <= endOfMonth
+    );
+    
+    if (categoryTasks.length === 0) return 5;
+    
+    const completedCount = categoryTasks.filter(t => t.completed).length;
+    const completionRate = completedCount / categoryTasks.length;
+    
+    return Math.round(1 + (completionRate * 9));
+  };
+
+  const getCategoryScores = (monthOffset: number = 0) => {
+    const scores: Record<Category, number> = {} as Record<Category, number>;
+    (Object.keys(categories) as Category[]).forEach(cat => {
+      scores[cat] = calculateCategoryScore(cat, monthOffset);
+    });
+    return scores;
+  };
+
+  const saveMonthlySnapshot = () => {
+    const currentMonth = today.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long' });
+    const existingIndex = monthlyHistory.findIndex(s => s.month === currentMonth);
+    const snapshot: MonthlySnapshot = {
+      month: currentMonth,
+      areas: getCategoryScores()
+    };
+    
+    if (existingIndex >= 0) {
+      const updated = [...monthlyHistory];
+      updated[existingIndex] = snapshot;
+      setMonthlyHistory(updated);
+    } else {
+      setMonthlyHistory([snapshot, ...monthlyHistory]);
+    }
+  };
+
+  const getRecommendations = () => {
+    const scores = getCategoryScores();
+    const recommendations: { category: Category; score: number; advice: string }[] = [];
+    
+    (Object.entries(scores) as [Category, number][]).forEach(([cat, score]) => {
+      if (score <= 4) {
+        const advice = {
+          family: 'Запланируйте встречу с близкими или звонок родным',
+          career: 'Составьте список приоритетных рабочих задач на неделю',
+          growth: 'Уделите 30 минут чтению или обучению нового навыка',
+          leisure: 'Найдите время для хобби или отдыха, который вас радует',
+          friends: 'Напишите другу или договоритесь о встрече'
+        }[cat];
+        recommendations.push({ category: cat, score, advice: advice || '' });
+      }
+    });
+    
+    return recommendations.sort((a, b) => a.score - b.score);
   };
 
   const addHabit = () => {
@@ -183,7 +254,6 @@ export default function Index() {
             <TabsTrigger 
               value="lifewheel" 
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600"
-              onClick={() => navigate('/life-wheel')}
             >
               <Icon name="Target" size={18} className="mr-2" />
               Колесо баланса
@@ -588,6 +658,249 @@ export default function Index() {
                     );
                   })
                 )}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="lifewheel" className="space-y-4">
+            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
+                  <Icon name="Target" size={28} />
+                  Колесо жизненного баланса
+                </h2>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={saveMonthlySnapshot}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    <Icon name="Save" size={18} className="mr-2" />
+                    Сохранить анализ
+                  </Button>
+                  <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="border-slate-600 hover:bg-slate-700"
+                      >
+                        <Icon name="History" size={18} className="mr-2" />
+                        История
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-slate-800 border-slate-700 max-w-3xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                          История колеса баланса
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-6 mt-4">
+                        {monthlyHistory.length === 0 ? (
+                          <div className="text-center py-8 text-slate-400">
+                            <Icon name="Calendar" size={48} className="mx-auto mb-4 opacity-50" />
+                            <p>Нет сохранённых снимков. Сохраните текущее состояние кнопкой "Сохранить анализ"</p>
+                          </div>
+                        ) : (
+                          monthlyHistory.map((snapshot, idx) => (
+                            <Card key={idx} className="p-4 bg-slate-900 border-slate-700">
+                              <h3 className="text-xl font-bold mb-4 text-purple-400">{snapshot.month}</h3>
+                              <div className="grid grid-cols-2 gap-3">
+                                {(Object.entries(snapshot.areas) as [Category, number][]).map(([cat, score]) => {
+                                  const catData = categories[cat];
+                                  return (
+                                    <div key={cat} className="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                                      <div className="flex items-center gap-2">
+                                        <Icon name={catData.icon as any} size={18} />
+                                        <span className="text-sm">{catData.label}</span>
+                                      </div>
+                                      <span className="text-xl font-bold">{score}/10</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </Card>
+                          ))
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className="flex flex-col items-center">
+                  <svg width="400" height="400" viewBox="0 0 400 400" className="max-w-full">
+                    {(() => {
+                      const centerX = 200;
+                      const centerY = 200;
+                      const maxRadius = 150;
+                      const scores = getCategoryScores();
+                      const categoryList = Object.keys(categories) as Category[];
+                      const angleStep = 360 / categoryList.length;
+
+                      const gridCircles = [];
+                      for (let i = 2; i <= 10; i += 2) {
+                        const radius = (i / 10) * maxRadius;
+                        gridCircles.push(
+                          <circle
+                            key={`circle-${i}`}
+                            cx={centerX}
+                            cy={centerY}
+                            r={radius}
+                            fill="none"
+                            stroke="rgba(148, 163, 184, 0.2)"
+                            strokeWidth="1"
+                          />
+                        );
+                      }
+
+                      const gridLines = categoryList.map((_, index) => {
+                        const angle = angleStep * index;
+                        const angleRad = ((angle - 90) * Math.PI) / 180.0;
+                        const endX = centerX + maxRadius * Math.cos(angleRad);
+                        const endY = centerY + maxRadius * Math.sin(angleRad);
+                        return (
+                          <line
+                            key={`line-${index}`}
+                            x1={centerX}
+                            y1={centerY}
+                            x2={endX}
+                            y2={endY}
+                            stroke="rgba(148, 163, 184, 0.2)"
+                            strokeWidth="1"
+                          />
+                        );
+                      });
+
+                      let pathData = '';
+                      categoryList.forEach((cat, index) => {
+                        const angle = angleStep * index;
+                        const angleRad = ((angle - 90) * Math.PI) / 180.0;
+                        const score = scores[cat];
+                        const radius = (score / 10) * maxRadius;
+                        const x = centerX + radius * Math.cos(angleRad);
+                        const y = centerY + radius * Math.sin(angleRad);
+                        
+                        if (index === 0) {
+                          pathData += `M ${x} ${y}`;
+                        } else {
+                          pathData += ` L ${x} ${y}`;
+                        }
+                      });
+                      pathData += ' Z';
+
+                      const labels = categoryList.map((cat, index) => {
+                        const angle = angleStep * index;
+                        const angleRad = ((angle - 90) * Math.PI) / 180.0;
+                        const labelRadius = 170;
+                        const x = centerX + labelRadius * Math.cos(angleRad);
+                        const y = centerY + labelRadius * Math.sin(angleRad);
+                        
+                        return (
+                          <text
+                            key={`label-${cat}`}
+                            x={x}
+                            y={y}
+                            textAnchor="middle"
+                            fill="#94a3b8"
+                            fontSize="12"
+                            fontWeight="500"
+                          >
+                            {categories[cat].label}
+                          </text>
+                        );
+                      });
+
+                      return (
+                        <>
+                          {gridCircles}
+                          {gridLines}
+                          <path
+                            d={pathData}
+                            fill="rgba(168, 85, 247, 0.3)"
+                            stroke="rgba(168, 85, 247, 0.8)"
+                            strokeWidth="2"
+                          />
+                          {labels}
+                        </>
+                      );
+                    })()}
+                  </svg>
+                  
+                  <div className="mt-6 text-center">
+                    <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {(() => {
+                        const scores = getCategoryScores();
+                        const avg = Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length;
+                        return avg.toFixed(1);
+                      })()}
+                    </div>
+                    <div className="text-slate-400 mt-2">Средний балл</div>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                      <Icon name="BarChart3" size={24} />
+                      Оценка по категориям
+                    </h3>
+                    <div className="space-y-3">
+                      {(Object.entries(getCategoryScores()) as [Category, number][]).map(([cat, score]) => {
+                        const catData = categories[cat];
+                        return (
+                          <div key={cat} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                            <div className="flex items-center gap-3">
+                              <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color} bg-opacity-20`}>
+                                <Icon name={catData.icon as any} size={20} />
+                              </div>
+                              <span className="font-medium">{catData.label}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress value={score * 10} className="w-24 h-2" />
+                              <span className="text-2xl font-bold w-12 text-right">{score}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/30 p-4">
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-orange-400">
+                      <Icon name="AlertTriangle" size={24} />
+                      Рекомендации
+                    </h3>
+                    <div className="space-y-3">
+                      {getRecommendations().length === 0 ? (
+                        <div className="text-center py-4 text-slate-300">
+                          <Icon name="CheckCircle" size={32} className="mx-auto mb-2 text-green-400" />
+                          <p className="font-medium">Отличный баланс!</p>
+                          <p className="text-sm text-slate-400 mt-1">Все сферы жизни в гармонии</p>
+                        </div>
+                      ) : (
+                        getRecommendations().map((rec) => {
+                          const catData = categories[rec.category];
+                          return (
+                            <div key={rec.category} className="p-3 bg-slate-900/50 rounded-lg border border-slate-700">
+                              <div className="flex items-start gap-3">
+                                <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color} bg-opacity-20 mt-1`}>
+                                  <Icon name={catData.icon as any} size={18} />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="font-semibold text-slate-200">{catData.label}</span>
+                                    <span className="text-orange-400 font-bold">{rec.score}/10</span>
+                                  </div>
+                                  <p className="text-sm text-slate-300">{rec.advice}</p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </Card>
           </TabsContent>
