@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
+import { useNavigate } from 'react-router-dom';
 
 type Category = 'family' | 'career' | 'growth' | 'leisure' | 'friends';
 
@@ -34,6 +35,7 @@ const categories = {
 };
 
 export default function Index() {
+  const navigate = useNavigate();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -169,7 +171,7 @@ export default function Index() {
         </div>
 
         <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-800/50 backdrop-blur-sm">
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-slate-800/50 backdrop-blur-sm">
             <TabsTrigger value="tasks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600">
               <Icon name="CheckSquare" size={18} className="mr-2" />
               Трекер дел
@@ -177,6 +179,14 @@ export default function Index() {
             <TabsTrigger value="habits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600">
               <Icon name="Repeat" size={18} className="mr-2" />
               Привычки
+            </TabsTrigger>
+            <TabsTrigger 
+              value="lifewheel" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600"
+              onClick={() => navigate('/life-wheel')}
+            >
+              <Icon name="Target" size={18} className="mr-2" />
+              Колесо баланса
             </TabsTrigger>
           </TabsList>
 
