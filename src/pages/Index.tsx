@@ -26,11 +26,11 @@ interface Task {
 }
 
 const categories = {
-  family: { label: 'Семья', icon: 'Heart', color: 'from-pink-300 to-rose-300', bg: 'bg-pink-100', border: 'border-pink-200', text: 'text-pink-700' },
-  career: { label: 'Карьера', icon: 'Briefcase', color: 'from-purple-300 to-violet-300', bg: 'bg-purple-100', border: 'border-purple-200', text: 'text-purple-700' },
-  growth: { label: 'Развитие', icon: 'BookOpen', color: 'from-blue-300 to-cyan-300', bg: 'bg-blue-100', border: 'border-blue-200', text: 'text-blue-700' },
-  leisure: { label: 'Отдых', icon: 'Coffee', color: 'from-orange-300 to-amber-300', bg: 'bg-orange-100', border: 'border-orange-200', text: 'text-orange-700' },
-  friends: { label: 'Друзья', icon: 'Users', color: 'from-green-300 to-emerald-300', bg: 'bg-green-100', border: 'border-green-200', text: 'text-green-700' },
+  family: { label: 'Семья', icon: 'Heart', color: 'from-pink-400 to-rose-400', bg: 'bg-pink-950/30', border: 'border-pink-800/50', text: 'text-pink-300' },
+  career: { label: 'Карьера', icon: 'Briefcase', color: 'from-purple-400 to-violet-400', bg: 'bg-purple-950/30', border: 'border-purple-800/50', text: 'text-purple-300' },
+  growth: { label: 'Развитие', icon: 'BookOpen', color: 'from-blue-400 to-cyan-400', bg: 'bg-blue-950/30', border: 'border-blue-800/50', text: 'text-blue-300' },
+  leisure: { label: 'Отдых', icon: 'Coffee', color: 'from-orange-400 to-amber-400', bg: 'bg-orange-950/30', border: 'border-orange-800/50', text: 'text-orange-300' },
+  friends: { label: 'Друзья', icon: 'Users', color: 'from-green-400 to-emerald-400', bg: 'bg-green-950/30', border: 'border-green-800/50', text: 'text-green-300' },
 };
 
 interface MonthlySnapshot {
@@ -230,8 +230,8 @@ export default function Index() {
   const regularTasks = todayTasks.filter(t => !t.isHabit);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 p-4 md:p-8 relative">
-      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4OCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=)'}}></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 p-4 md:p-8 relative">
+      <div className="absolute inset-0 opacity-10 pointer-events-none" style={{backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4OCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=)'}}></div>
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-block relative">
@@ -240,22 +240,22 @@ export default function Index() {
             </h1>
             <div className="absolute -top-8 -right-4 text-5xl animate-bounce">🦋</div>
           </div>
-          <p className="text-purple-600 text-lg mt-2" style={{fontFamily: 'Patrick Hand, cursive'}}>где сбываются мечты</p>
+          <p className="text-purple-400 text-lg mt-2" style={{fontFamily: 'Patrick Hand, cursive'}}>где сбываются мечты</p>
         </div>
 
         <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/80 backdrop-blur-sm border-2 border-purple-200 shadow-lg">
-            <TabsTrigger value="tasks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-200 data-[state=active]:to-purple-200 data-[state=active]:text-purple-700 text-purple-600">
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-slate-900/80 backdrop-blur-sm border-2 border-purple-800/50 shadow-lg">
+            <TabsTrigger value="tasks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-900/50 data-[state=active]:to-purple-900/50 data-[state=active]:text-pink-300 text-purple-400">
               <Icon name="CheckSquare" size={18} className="mr-2" />
               Трекер дел
             </TabsTrigger>
-            <TabsTrigger value="habits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-200 data-[state=active]:to-cyan-200 data-[state=active]:text-blue-700 text-blue-600">
+            <TabsTrigger value="habits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-900/50 data-[state=active]:to-cyan-900/50 data-[state=active]:text-blue-300 text-blue-400">
               <Icon name="Repeat" size={18} className="mr-2" />
               Привычки
             </TabsTrigger>
             <TabsTrigger 
               value="lifewheel" 
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-200 data-[state=active]:to-pink-200 data-[state=active]:text-pink-700 text-pink-600"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-900/50 data-[state=active]:to-pink-900/50 data-[state=active]:text-purple-300 text-pink-400"
             >
               <Icon name="Target" size={18} className="mr-2" />
               Колесо баланса
@@ -263,9 +263,9 @@ export default function Index() {
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-4">
-            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl animate-scale-in">
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-2 border-purple-800/50 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-3xl font-bold text-purple-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                <h2 className="text-3xl font-bold text-purple-400 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="Calendar" size={28} />
                   Календарь
                 </h2>
@@ -274,7 +274,7 @@ export default function Index() {
                     size="sm"
                     variant={calendarView === 'week' ? 'default' : 'outline'}
                     onClick={() => setCalendarView('week')}
-                    className={calendarView === 'week' ? 'bg-gradient-to-r from-pink-300 to-purple-300 text-purple-700 hover:from-pink-400 hover:to-purple-400' : 'border-purple-300 text-purple-600 hover:bg-purple-100'}
+                    className={calendarView === 'week' ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-purple-100 hover:from-pink-400 hover:to-purple-400' : 'border-purple-500/50 text-purple-400 hover:bg-purple-900/30'}
                   >
                     Неделя
                   </Button>
@@ -282,7 +282,7 @@ export default function Index() {
                     size="sm"
                     variant={calendarView === 'month' ? 'default' : 'outline'}
                     onClick={() => setCalendarView('month')}
-                    className={calendarView === 'month' ? 'bg-gradient-to-r from-pink-300 to-purple-300 text-purple-700 hover:from-pink-400 hover:to-purple-400' : 'border-purple-300 text-purple-600 hover:bg-purple-100'}
+                    className={calendarView === 'month' ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-purple-100 hover:from-pink-400 hover:to-purple-400' : 'border-purple-500/50 text-purple-400 hover:bg-purple-900/30'}
                   >
                     Месяц
                   </Button>
@@ -294,12 +294,12 @@ export default function Index() {
                     mode="single"
                     selected={selectedDate}
                     onSelect={(date) => date && setSelectedDate(date)}
-                    className="rounded-xl border-2 border-purple-200 bg-white/50 p-3"
+                    className="rounded-xl border-2 border-purple-800/50 bg-slate-900/50 p-3"
                     modifiers={{
                       hasTasks: getDatesWithTasks()
                     }}
                     modifiersClassNames={{
-                      hasTasks: 'bg-purple-200 font-bold text-purple-700'
+                      hasTasks: 'bg-purple-900/40 font-bold text-purple-300'
                     }}
                   />
                 ) : (
@@ -313,11 +313,11 @@ export default function Index() {
                           newDate.setDate(newDate.getDate() - 7);
                           setSelectedDate(newDate);
                         }}
-                        className="text-purple-600 hover:text-purple-800 hover:bg-purple-100"
+                        className="text-purple-400 hover:text-purple-200 hover:bg-purple-900/30"
                       >
                         <Icon name="ChevronLeft" size={24} />
                       </Button>
-                      <h3 className="text-lg font-semibold text-purple-700">
+                      <h3 className="text-lg font-semibold text-purple-300">
                         {formatDate(getWeekStart(selectedDate))} — {formatDate(getWeekEnd(selectedDate))}
                       </h3>
                       <Button
@@ -328,7 +328,7 @@ export default function Index() {
                           newDate.setDate(newDate.getDate() + 7);
                           setSelectedDate(newDate);
                         }}
-                        className="text-purple-600 hover:text-purple-800 hover:bg-purple-100"
+                        className="text-purple-400 hover:text-purple-200 hover:bg-purple-900/30"
                       >
                         <Icon name="ChevronRight" size={24} />
                       </Button>
@@ -345,16 +345,16 @@ export default function Index() {
                             onClick={() => setSelectedDate(day)}
                             className={`p-3 rounded-xl border-2 transition-all ${
                               isSelected 
-                                ? 'border-purple-400 bg-gradient-to-br from-pink-200 to-purple-200 shadow-lg' 
+                                ? 'border-purple-400 bg-gradient-to-br from-pink-900/50 to-purple-900/50 shadow-lg' 
                                 : isToday
-                                ? 'border-purple-300 bg-purple-50'
-                                : 'border-purple-200 bg-white hover:border-purple-300 hover:bg-purple-50'
+                                ? 'border-purple-400 bg-purple-950/30'
+                                : 'border-purple-800/50 bg-slate-900 hover:border-purple-400 hover:bg-purple-950/30'
                             }`}
                           >
-                            <div className="text-xs text-purple-500 font-medium">
+                            <div className="text-xs text-purple-400 font-medium">
                               {day.toLocaleDateString('ru-RU', { weekday: 'short' })}
                             </div>
-                            <div className={`text-xl font-bold ${isSelected ? 'text-purple-700' : 'text-purple-600'}`}>
+                            <div className={`text-xl font-bold ${isSelected ? 'text-purple-300' : 'text-purple-400'}`}>
                               {day.getDate()}
                             </div>
                             {dayTasks.length > 0 && (
@@ -373,44 +373,44 @@ export default function Index() {
               </div>
             </Card>
 
-            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-pink-200 shadow-xl animate-scale-in">
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-2 border-pink-800/50 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-3xl font-bold text-pink-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                <h2 className="text-3xl font-bold text-pink-400 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="CheckSquare" size={28} />
                   Дела на {formatDate(selectedDate)}
                 </h2>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-pink-300 to-rose-300 hover:from-pink-400 hover:to-rose-400 text-pink-800 shadow-md">
+                    <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-pink-100 shadow-md">
                       <Icon name="Plus" size={20} className="mr-2" />
                       Добавить
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-white border-2 border-pink-200 shadow-2xl">
+                  <DialogContent className="bg-slate-900 border-2 border-pink-800/50 shadow-2xl">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl text-pink-600" style={{fontFamily: 'Patrick Hand, cursive'}}>Новое дело</DialogTitle>
+                      <DialogTitle className="text-3xl text-pink-400" style={{fontFamily: 'Patrick Hand, cursive'}}>Новое дело</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 mt-4">
                       <div>
-                        <Label htmlFor="task-title" className="text-purple-700">Что нужно сделать?</Label>
+                        <Label htmlFor="task-title" className="text-purple-300">Что нужно сделать?</Label>
                         <Input
                           id="task-title"
                           value={newTaskTitle}
                           onChange={(e) => setNewTaskTitle(e.target.value)}
                           placeholder="Например: Купить цветы 🌸"
-                          className="bg-purple-50 border-2 border-purple-200 mt-2 focus:border-purple-400"
+                          className="bg-purple-950/30 border-2 border-purple-800/50 mt-2 focus:border-purple-400"
                         />
                       </div>
                       
                       <div>
-                        <Label className="text-purple-700">Категория</Label>
+                        <Label className="text-purple-300">Категория</Label>
                         <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as Category)}>
-                          <SelectTrigger className="bg-purple-50 border-2 border-purple-200 mt-2">
+                          <SelectTrigger className="bg-purple-950/30 border-2 border-purple-800/50 mt-2">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-2 border-purple-200">
+                          <SelectContent className="bg-slate-900 border-2 border-purple-800/50">
                             {Object.entries(categories).map(([key, cat]) => (
-                              <SelectItem key={key} value={key} className="hover:bg-purple-50">
+                              <SelectItem key={key} value={key} className="hover:bg-purple-950/30">
                                 <div className="flex items-center gap-2">
                                   <Icon name={cat.icon as any} size={16} />
                                   {cat.label}
@@ -421,8 +421,8 @@ export default function Index() {
                         </Select>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border-2 border-purple-200">
-                        <Label htmlFor="habit-switch" className="text-purple-700">Это привычка?</Label>
+                      <div className="flex items-center justify-between p-3 bg-purple-950/30 rounded-lg border-2 border-purple-800/50">
+                        <Label htmlFor="habit-switch" className="text-purple-300">Это привычка?</Label>
                         <Switch
                           id="habit-switch"
                           checked={isHabit}
@@ -432,7 +432,7 @@ export default function Index() {
 
                       {isHabit && (
                         <div>
-                          <Label htmlFor="habit-days" className="text-purple-700">Количество дней</Label>
+                          <Label htmlFor="habit-days" className="text-purple-300">Количество дней</Label>
                           <Input
                             id="habit-days"
                             type="number"
@@ -440,14 +440,14 @@ export default function Index() {
                             max="365"
                             value={habitDays}
                             onChange={(e) => setHabitDays(Number(e.target.value))}
-                            className="bg-purple-50 border-2 border-purple-200 mt-2"
+                            className="bg-purple-950/30 border-2 border-purple-800/50 mt-2"
                           />
                         </div>
                       )}
 
                       <Button
                         onClick={addTask}
-                        className="w-full bg-gradient-to-r from-pink-300 to-purple-300 hover:from-pink-400 hover:to-purple-400 text-purple-800 font-bold text-lg shadow-md"
+                        className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-purple-200 font-bold text-lg shadow-md"
                       >
                         ✨ Создать
                       </Button>
@@ -476,7 +476,7 @@ export default function Index() {
                             size="icon"
                             variant="ghost"
                             onClick={() => toggleTask(task.id)}
-                            className={`rounded-full ${task.completed ? 'bg-green-200 text-green-700' : 'bg-white border-2 border-purple-300'}`}
+                            className={`rounded-full ${task.completed ? 'bg-green-900/40 text-green-300' : 'bg-slate-900 border-2 border-purple-300'}`}
                           >
                             <Icon name={task.completed ? 'Check' : 'Circle'} size={20} />
                           </Button>
@@ -495,7 +495,7 @@ export default function Index() {
                             size="icon"
                             variant="ghost"
                             onClick={() => deleteTask(task.id)}
-                            className="text-red-400 hover:text-red-600 hover:bg-red-100"
+                            className="text-red-400 hover:text-red-600 hover:bg-red-900/30"
                           >
                             <Icon name="Trash2" size={18} />
                           </Button>
@@ -509,44 +509,44 @@ export default function Index() {
           </TabsContent>
 
           <TabsContent value="habits" className="space-y-4">
-            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl animate-scale-in">
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-2 border-blue-800/50 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-blue-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                <h2 className="text-3xl font-bold text-blue-400 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="Target" size={28} />
                   Мои привычки
                 </h2>
                 <Dialog open={isHabitDialogOpen} onOpenChange={setIsHabitDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 shadow-md">
+                    <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-blue-200 shadow-md">
                       <Icon name="Plus" size={20} className="mr-2" />
                       Новая привычка
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-white border-2 border-blue-200 shadow-2xl max-w-md">
+                  <DialogContent className="bg-slate-900 border-2 border-blue-800/50 shadow-2xl max-w-md">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl text-blue-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                      <DialogTitle className="text-3xl text-blue-400" style={{fontFamily: 'Patrick Hand, cursive'}}>
                         Создать привычку
                       </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 mt-4">
                       <div>
-                        <Label htmlFor="habit-title" className="text-purple-700">Название привычки</Label>
+                        <Label htmlFor="habit-title" className="text-purple-300">Название привычки</Label>
                         <Input
                           id="habit-title"
                           value={newTaskTitle}
                           onChange={(e) => setNewTaskTitle(e.target.value)}
                           placeholder="Например: Утренняя зарядка 💪"
-                          className="bg-blue-50 border-2 border-blue-200 mt-2"
+                          className="bg-blue-950/30 border-2 border-blue-800/50 mt-2"
                         />
                       </div>
                       
                       <div>
-                        <Label className="text-purple-700">Категория</Label>
+                        <Label className="text-purple-300">Категория</Label>
                         <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as Category)}>
-                          <SelectTrigger className="bg-blue-50 border-2 border-blue-200 mt-2">
+                          <SelectTrigger className="bg-blue-950/30 border-2 border-blue-800/50 mt-2">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-2 border-blue-200">
+                          <SelectContent className="bg-slate-900 border-2 border-blue-800/50">
                             {Object.entries(categories).map(([key, cat]) => (
                               <SelectItem key={key} value={key}>
                                 <div className="flex items-center gap-2">
@@ -560,8 +560,8 @@ export default function Index() {
                       </div>
 
                       <div>
-                        <Label className="text-purple-700">Дата начала</Label>
-                        <div className="mt-2 flex justify-center p-3 bg-blue-50 rounded-lg border-2 border-blue-200">
+                        <Label className="text-purple-300">Дата начала</Label>
+                        <div className="mt-2 flex justify-center p-3 bg-blue-950/30 rounded-lg border-2 border-blue-800/50">
                           <Calendar
                             mode="single"
                             selected={habitStartDate}
@@ -572,7 +572,7 @@ export default function Index() {
                       </div>
 
                       <div>
-                        <Label htmlFor="habit-days" className="text-purple-700">Количество дней</Label>
+                        <Label htmlFor="habit-days" className="text-purple-300">Количество дней</Label>
                         <Input
                           id="habit-days"
                           type="number"
@@ -580,16 +580,16 @@ export default function Index() {
                           max="365"
                           value={habitDays}
                           onChange={(e) => setHabitDays(Number(e.target.value))}
-                          className="bg-blue-50 border-2 border-blue-200 mt-2"
+                          className="bg-blue-950/30 border-2 border-blue-800/50 mt-2"
                         />
-                        <p className="text-xs text-purple-500 mt-1">
+                        <p className="text-xs text-purple-400 mt-1">
                           Привычка будет создана на {habitDays} {habitDays === 1 ? 'день' : habitDays < 5 ? 'дня' : 'дней'} начиная с {formatDate(habitStartDate)}
                         </p>
                       </div>
 
                       <Button
                         onClick={addHabit}
-                        className="w-full bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 font-bold text-lg shadow-md"
+                        className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-blue-200 font-bold text-lg shadow-md"
                       >
                         ✨ Создать привычку
                       </Button>
@@ -626,7 +626,7 @@ export default function Index() {
                             size="icon"
                             variant="ghost"
                             onClick={() => deleteTask(habit.id)}
-                            className="text-red-400 hover:text-red-600 hover:bg-red-100"
+                            className="text-red-400 hover:text-red-600 hover:bg-red-900/30"
                           >
                             <Icon name="Trash2" size={18} />
                           </Button>
@@ -634,20 +634,20 @@ export default function Index() {
 
                         <div className="space-y-3">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-purple-600 font-medium">Прогресс</span>
-                            <span className="font-bold text-lg text-purple-700">
+                            <span className="text-purple-400 font-medium">Прогресс</span>
+                            <span className="font-bold text-lg text-purple-300">
                               {habit.streak}/{habit.daysTotal} дней
                             </span>
                           </div>
-                          <Progress value={progressPercent} className="h-2 bg-purple-200" />
+                          <Progress value={progressPercent} className="h-2 bg-purple-900/40" />
                           
                           <div className="flex items-center gap-2 mt-4">
                             <Button
                               onClick={() => toggleTask(habit.id)}
                               className={`flex-1 ${
                                 habit.completed 
-                                  ? 'bg-green-300 hover:bg-green-400 text-green-800' 
-                                  : 'bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 shadow-md'
+                                  ? 'bg-green-300 hover:bg-green-400 text-green-200' 
+                                  : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-blue-200 shadow-md'
                               }`}
                             >
                               <Icon name={habit.completed ? 'CheckCircle2' : 'Circle'} size={18} className="mr-2" />
@@ -657,8 +657,8 @@ export default function Index() {
                         </div>
 
                         {habit.streak && habit.streak >= 3 && (
-                          <div className="mt-4 p-3 bg-yellow-100 rounded-lg border-2 border-yellow-200 text-center">
-                            <p className="text-yellow-700 font-medium">
+                          <div className="mt-4 p-3 bg-yellow-950/30 rounded-lg border-2 border-yellow-800/50 text-center">
+                            <p className="text-yellow-300 font-medium">
                               🔥 Серия: {habit.streak} {habit.streak === 1 ? 'день' : habit.streak < 5 ? 'дня' : 'дней'}!
                             </p>
                           </div>
@@ -672,16 +672,16 @@ export default function Index() {
           </TabsContent>
 
           <TabsContent value="lifewheel" className="space-y-4">
-            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl animate-scale-in">
+            <Card className="p-6 bg-slate-900/90 backdrop-blur-sm border-2 border-purple-800/50 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-purple-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                <h2 className="text-3xl font-bold text-purple-400 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="Target" size={28} />
                   Колесо жизненного баланса 🌈
                 </h2>
                 <div className="flex gap-2">
                   <Button
                     onClick={saveMonthlySnapshot}
-                    className="bg-gradient-to-r from-green-300 to-emerald-300 hover:from-green-400 hover:to-emerald-400 text-green-800 shadow-md"
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-green-200 shadow-md"
                   >
                     <Icon name="Save" size={18} className="mr-2" />
                     Сохранить
@@ -690,15 +690,15 @@ export default function Index() {
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        className="border-2 border-purple-300 text-purple-700 hover:bg-purple-100"
+                        className="border-2 border-purple-500/50 text-purple-400 hover:bg-purple-900/30"
                       >
                         <Icon name="History" size={18} className="mr-2" />
                         История
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-white border-2 border-purple-200 shadow-2xl max-w-3xl max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="bg-slate-900 border-2 border-purple-800/50 shadow-2xl max-w-3xl max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
-                        <DialogTitle className="text-3xl text-purple-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                        <DialogTitle className="text-3xl text-purple-400" style={{fontFamily: 'Patrick Hand, cursive'}}>
                           История колеса баланса 📖
                         </DialogTitle>
                       </DialogHeader>
@@ -710,8 +710,8 @@ export default function Index() {
                           </div>
                         ) : (
                           monthlyHistory.map((snapshot, idx) => (
-                            <Card key={idx} className="p-4 bg-purple-50 border-2 border-purple-200">
-                              <h3 className="text-2xl font-bold mb-4 text-purple-600" style={{fontFamily: 'Patrick Hand, cursive'}}>{snapshot.month}</h3>
+                            <Card key={idx} className="p-4 bg-purple-950/30 border-2 border-purple-800/50">
+                              <h3 className="text-2xl font-bold mb-4 text-purple-400" style={{fontFamily: 'Patrick Hand, cursive'}}>{snapshot.month}</h3>
                               <div className="grid grid-cols-2 gap-3">
                                 {(Object.entries(snapshot.areas) as [Category, number][]).map(([cat, score]) => {
                                   const catData = categories[cat];
@@ -736,7 +736,7 @@ export default function Index() {
               </div>
 
               <div className="grid lg:grid-cols-2 gap-6">
-                <div className="flex flex-col items-center bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border-2 border-purple-200">
+                <div className="flex flex-col items-center bg-gradient-to-br from-purple-950/30 to-pink-950/30 p-6 rounded-2xl border-2 border-purple-800/50">
                   <svg width="400" height="400" viewBox="0 0 400 400" className="max-w-full">
                     {(() => {
                       const centerX = 200;
@@ -756,7 +756,7 @@ export default function Index() {
                             cy={centerY}
                             r={radius}
                             fill="none"
-                            stroke="rgba(216, 180, 254, 0.3)"
+                            stroke="rgba(139, 92, 246, 0.2)"
                             strokeWidth="2"
                           />
                         );
@@ -774,7 +774,7 @@ export default function Index() {
                             y1={centerY}
                             x2={endX}
                             y2={endY}
-                            stroke="rgba(216, 180, 254, 0.3)"
+                            stroke="rgba(139, 92, 246, 0.2)"
                             strokeWidth="2"
                           />
                         );
@@ -810,7 +810,7 @@ export default function Index() {
                             x={x}
                             y={y}
                             textAnchor="middle"
-                            fill="#9333ea"
+                            fill="#c084fc"
                             fontSize="14"
                             fontWeight="600"
                             fontFamily="Patrick Hand, cursive"
@@ -837,20 +837,20 @@ export default function Index() {
                   </svg>
                   
                   <div className="mt-6 text-center">
-                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400" style={{fontFamily: 'Caveat, cursive'}}>
+                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500" style={{fontFamily: 'Caveat, cursive'}}>
                       {(() => {
                         const scores = getCategoryScores();
                         const avg = Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length;
                         return avg.toFixed(1);
                       })()}
                     </div>
-                    <div className="text-purple-600 mt-2 text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Средний балл ⭐</div>
+                    <div className="text-purple-400 mt-2 text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Средний балл ⭐</div>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl border-2 border-blue-200">
-                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                  <div className="bg-gradient-to-br from-blue-950/30 to-purple-950/30 p-6 rounded-2xl border-2 border-blue-800/50">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-400" style={{fontFamily: 'Patrick Hand, cursive'}}>
                       <Icon name="BarChart3" size={24} />
                       Оценка по категориям
                     </h3>
@@ -875,17 +875,17 @@ export default function Index() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border-2 border-orange-200 p-6">
-                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-orange-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                  <div className="bg-gradient-to-br from-orange-950/30 to-red-950/30 rounded-2xl border-2 border-orange-800/50 p-6">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-orange-400" style={{fontFamily: 'Patrick Hand, cursive'}}>
                       <Icon name="AlertTriangle" size={24} />
                       Рекомендации 💡
                     </h3>
                     <div className="space-y-3">
                       {getRecommendations().length === 0 ? (
-                        <div className="text-center py-4 text-green-700">
+                        <div className="text-center py-4 text-green-300">
                           <Icon name="CheckCircle" size={32} className="mx-auto mb-2 text-green-500" />
                           <p className="font-medium text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Отличный баланс! 🎉</p>
-                          <p className="text-sm text-green-600 mt-1">Все сферы жизни в гармонии</p>
+                          <p className="text-sm text-green-400 mt-1">Все сферы жизни в гармонии</p>
                         </div>
                       ) : (
                         getRecommendations().map((rec) => {
@@ -899,9 +899,9 @@ export default function Index() {
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between mb-1">
                                     <span className={`font-semibold ${catData.text}`}>{catData.label}</span>
-                                    <span className="text-orange-600 font-bold">{rec.score}/10</span>
+                                    <span className="text-orange-400 font-bold">{rec.score}/10</span>
                                   </div>
-                                  <p className="text-sm text-purple-700">{rec.advice}</p>
+                                  <p className="text-sm text-purple-300">{rec.advice}</p>
                                 </div>
                               </div>
                             </div>
