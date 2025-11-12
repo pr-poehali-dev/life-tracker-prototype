@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 
-
 type Category = 'family' | 'career' | 'growth' | 'leisure' | 'friends';
 
 interface Task {
@@ -27,11 +26,11 @@ interface Task {
 }
 
 const categories = {
-  family: { label: 'Семья', icon: 'Heart', color: 'from-pink-500 to-rose-500' },
-  career: { label: 'Карьера', icon: 'Briefcase', color: 'from-purple-500 to-violet-500' },
-  growth: { label: 'Развитие', icon: 'BookOpen', color: 'from-blue-500 to-cyan-500' },
-  leisure: { label: 'Отдых', icon: 'Coffee', color: 'from-orange-500 to-amber-500' },
-  friends: { label: 'Друзья', icon: 'Users', color: 'from-green-500 to-emerald-500' },
+  family: { label: 'Семья', icon: 'Heart', color: 'from-pink-300 to-rose-300', bg: 'bg-pink-100', border: 'border-pink-200', text: 'text-pink-700' },
+  career: { label: 'Карьера', icon: 'Briefcase', color: 'from-purple-300 to-violet-300', bg: 'bg-purple-100', border: 'border-purple-200', text: 'text-purple-700' },
+  growth: { label: 'Развитие', icon: 'BookOpen', color: 'from-blue-300 to-cyan-300', bg: 'bg-blue-100', border: 'border-blue-200', text: 'text-blue-700' },
+  leisure: { label: 'Отдых', icon: 'Coffee', color: 'from-orange-300 to-amber-300', bg: 'bg-orange-100', border: 'border-orange-200', text: 'text-orange-700' },
+  friends: { label: 'Друзья', icon: 'Users', color: 'from-green-300 to-emerald-300', bg: 'bg-green-100', border: 'border-green-200', text: 'text-green-700' },
 };
 
 interface MonthlySnapshot {
@@ -193,17 +192,8 @@ export default function Index() {
     return tasks.filter(task => isSameDay(task.date, date));
   };
 
-  const tasksForSelectedDate = getTasksForDate(selectedDate);
-  const habits = tasksForSelectedDate.filter(t => t.isHabit);
-  const regularTasks = tasksForSelectedDate.filter(t => !t.isHabit);
-
   const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('ru-RU', options);
-  };
-
-  const getDatesWithTasks = () => {
-    return tasks.map(task => task.date);
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
   };
 
   const getWeekStart = (date: Date) => {
@@ -220,8 +210,12 @@ export default function Index() {
     return end;
   };
 
-  const getWeekDays = (date: Date) => {
-    const start = getWeekStart(date);
+  const getDatesWithTasks = () => {
+    return tasks.map(task => task.date);
+  };
+
+  const getWeekDays = () => {
+    const start = getWeekStart(selectedDate);
     const days = [];
     for (let i = 0; i < 7; i++) {
       const day = new Date(start);
@@ -231,29 +225,37 @@ export default function Index() {
     return days;
   };
 
+  const todayTasks = getTasksForDate(selectedDate);
+  const habits = todayTasks.filter(t => t.isHabit);
+  const regularTasks = todayTasks.filter(t => !t.isHabit);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 p-4 md:p-8 relative">
+      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4OCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=)'}}></div>
+      <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
-            LifeBalance
-          </h1>
-          <p className="text-slate-300 text-lg">Гармония через действия</p>
+          <div className="inline-block relative">
+            <h1 className="text-6xl md:text-8xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400" style={{fontFamily: 'Caveat, cursive'}}>
+              Мой дневник ✨
+            </h1>
+            <div className="absolute -top-8 -right-4 text-5xl animate-bounce">🦋</div>
+          </div>
+          <p className="text-purple-600 text-lg mt-2" style={{fontFamily: 'Patrick Hand, cursive'}}>где сбываются мечты</p>
         </div>
 
         <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6 bg-slate-800/50 backdrop-blur-sm">
-            <TabsTrigger value="tasks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600">
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/80 backdrop-blur-sm border-2 border-purple-200 shadow-lg">
+            <TabsTrigger value="tasks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-200 data-[state=active]:to-purple-200 data-[state=active]:text-purple-700 text-purple-600">
               <Icon name="CheckSquare" size={18} className="mr-2" />
               Трекер дел
             </TabsTrigger>
-            <TabsTrigger value="habits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600">
+            <TabsTrigger value="habits" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-200 data-[state=active]:to-cyan-200 data-[state=active]:text-blue-700 text-blue-600">
               <Icon name="Repeat" size={18} className="mr-2" />
               Привычки
             </TabsTrigger>
             <TabsTrigger 
               value="lifewheel" 
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-200 data-[state=active]:to-pink-200 data-[state=active]:text-pink-700 text-pink-600"
             >
               <Icon name="Target" size={18} className="mr-2" />
               Колесо баланса
@@ -261,10 +263,10 @@ export default function Index() {
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-4">
-            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
-                  <Icon name="Calendar" size={24} />
+                <h2 className="text-3xl font-bold text-purple-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                  <Icon name="Calendar" size={28} />
                   Календарь
                 </h2>
                 <div className="flex gap-2">
@@ -272,7 +274,7 @@ export default function Index() {
                     size="sm"
                     variant={calendarView === 'week' ? 'default' : 'outline'}
                     onClick={() => setCalendarView('week')}
-                    className={calendarView === 'week' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'border-slate-600 text-slate-300'}
+                    className={calendarView === 'week' ? 'bg-gradient-to-r from-pink-300 to-purple-300 text-purple-700 hover:from-pink-400 hover:to-purple-400' : 'border-purple-300 text-purple-600 hover:bg-purple-100'}
                   >
                     Неделя
                   </Button>
@@ -280,7 +282,7 @@ export default function Index() {
                     size="sm"
                     variant={calendarView === 'month' ? 'default' : 'outline'}
                     onClick={() => setCalendarView('month')}
-                    className={calendarView === 'month' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'border-slate-600 text-slate-300'}
+                    className={calendarView === 'month' ? 'bg-gradient-to-r from-pink-300 to-purple-300 text-purple-700 hover:from-pink-400 hover:to-purple-400' : 'border-purple-300 text-purple-600 hover:bg-purple-100'}
                   >
                     Месяц
                   </Button>
@@ -292,12 +294,12 @@ export default function Index() {
                     mode="single"
                     selected={selectedDate}
                     onSelect={(date) => date && setSelectedDate(date)}
-                    className="rounded-md border border-slate-700 bg-slate-900/50"
+                    className="rounded-xl border-2 border-purple-200 bg-white/50 p-3"
                     modifiers={{
                       hasTasks: getDatesWithTasks()
                     }}
                     modifiersClassNames={{
-                      hasTasks: 'bg-purple-500/30 font-bold'
+                      hasTasks: 'bg-purple-200 font-bold text-purple-700'
                     }}
                   />
                 ) : (
@@ -311,11 +313,11 @@ export default function Index() {
                           newDate.setDate(newDate.getDate() - 7);
                           setSelectedDate(newDate);
                         }}
-                        className="text-slate-300 hover:text-white"
+                        className="text-purple-600 hover:text-purple-800 hover:bg-purple-100"
                       >
                         <Icon name="ChevronLeft" size={24} />
                       </Button>
-                      <h3 className="text-lg font-semibold text-slate-200">
+                      <h3 className="text-lg font-semibold text-purple-700">
                         {formatDate(getWeekStart(selectedDate))} — {formatDate(getWeekEnd(selectedDate))}
                       </h3>
                       <Button
@@ -326,35 +328,40 @@ export default function Index() {
                           newDate.setDate(newDate.getDate() + 7);
                           setSelectedDate(newDate);
                         }}
-                        className="text-slate-300 hover:text-white"
+                        className="text-purple-600 hover:text-purple-800 hover:bg-purple-100"
                       >
                         <Icon name="ChevronRight" size={24} />
                       </Button>
                     </div>
                     <div className="grid grid-cols-7 gap-2">
-                      {getWeekDays(selectedDate).map((day, index) => {
-                        const isSelected = isSameDay(day, selectedDate);
-                        const hasTasks = getTasksForDate(day).length > 0;
+                      {getWeekDays().map((day, idx) => {
+                        const dayTasks = getTasksForDate(day);
                         const isToday = isSameDay(day, today);
+                        const isSelected = isSameDay(day, selectedDate);
+                        
                         return (
                           <button
-                            key={index}
+                            key={idx}
                             onClick={() => setSelectedDate(day)}
-                            className={`p-4 rounded-xl text-center transition-all duration-300 hover:scale-105 ${
-                              isSelected
-                                ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white shadow-lg'
-                                : hasTasks
-                                ? 'bg-purple-500/20 border border-purple-500/50 text-slate-200'
-                                : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50'
-                            } ${isToday ? 'ring-2 ring-cyan-400' : ''}`}
+                            className={`p-3 rounded-xl border-2 transition-all ${
+                              isSelected 
+                                ? 'border-purple-400 bg-gradient-to-br from-pink-200 to-purple-200 shadow-lg' 
+                                : isToday
+                                ? 'border-purple-300 bg-purple-50'
+                                : 'border-purple-200 bg-white hover:border-purple-300 hover:bg-purple-50'
+                            }`}
                           >
-                            <div className="text-xs mb-1 font-medium">
+                            <div className="text-xs text-purple-500 font-medium">
                               {day.toLocaleDateString('ru-RU', { weekday: 'short' })}
                             </div>
-                            <div className="text-2xl font-bold">{day.getDate()}</div>
-                            {hasTasks && !isSelected && (
-                              <div className="mt-1 flex justify-center">
-                                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                            <div className={`text-xl font-bold ${isSelected ? 'text-purple-700' : 'text-purple-600'}`}>
+                              {day.getDate()}
+                            </div>
+                            {dayTasks.length > 0 && (
+                              <div className="flex gap-1 mt-1 justify-center">
+                                {dayTasks.slice(0, 3).map((_, i) => (
+                                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+                                ))}
                               </div>
                             )}
                           </button>
@@ -364,48 +371,46 @@ export default function Index() {
                   </div>
                 )}
               </div>
-              <div className="text-center text-slate-300 mb-4">
-                <p className="text-lg">Выбрана дата: <span className="font-bold text-purple-400">{formatDate(selectedDate)}</span></p>
-              </div>
             </Card>
 
-            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
-              <div className="flex gap-3 mb-4">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-pink-200 shadow-xl animate-scale-in">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-3xl font-bold text-pink-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                  <Icon name="CheckSquare" size={28} />
+                  Дела на {formatDate(selectedDate)}
+                </h2>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-105">
+                    <Button className="bg-gradient-to-r from-pink-300 to-rose-300 hover:from-pink-400 hover:to-rose-400 text-pink-800 shadow-md">
                       <Icon name="Plus" size={20} className="mr-2" />
-                      Добавить дело
+                      Добавить
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-slate-800 border-slate-700">
+                  <DialogContent className="bg-white border-2 border-pink-200 shadow-2xl">
                     <DialogHeader>
-                      <DialogTitle className="text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        Новое дело
-                      </DialogTitle>
+                      <DialogTitle className="text-3xl text-pink-600" style={{fontFamily: 'Patrick Hand, cursive'}}>Новое дело</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 mt-4">
                       <div>
-                        <Label htmlFor="task-title">Название</Label>
+                        <Label htmlFor="task-title" className="text-purple-700">Что нужно сделать?</Label>
                         <Input
                           id="task-title"
                           value={newTaskTitle}
                           onChange={(e) => setNewTaskTitle(e.target.value)}
-                          placeholder="Например: Позвонить родителям"
-                          className="bg-slate-900 border-slate-700 mt-2"
-                          onKeyDown={(e) => e.key === 'Enter' && addTask()}
+                          placeholder="Например: Купить цветы 🌸"
+                          className="bg-purple-50 border-2 border-purple-200 mt-2 focus:border-purple-400"
                         />
                       </div>
                       
                       <div>
-                        <Label>Категория</Label>
+                        <Label className="text-purple-700">Категория</Label>
                         <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as Category)}>
-                          <SelectTrigger className="bg-slate-900 border-slate-700 mt-2">
+                          <SelectTrigger className="bg-purple-50 border-2 border-purple-200 mt-2">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectContent className="bg-white border-2 border-purple-200">
                             {Object.entries(categories).map(([key, cat]) => (
-                              <SelectItem key={key} value={key}>
+                              <SelectItem key={key} value={key} className="hover:bg-purple-50">
                                 <div className="flex items-center gap-2">
                                   <Icon name={cat.icon as any} size={16} />
                                   {cat.label}
@@ -416,10 +421,10 @@ export default function Index() {
                         </Select>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="is-habit">Сделать привычкой</Label>
+                      <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border-2 border-purple-200">
+                        <Label htmlFor="habit-switch" className="text-purple-700">Это привычка?</Label>
                         <Switch
-                          id="is-habit"
+                          id="habit-switch"
                           checked={isHabit}
                           onCheckedChange={setIsHabit}
                         />
@@ -427,23 +432,24 @@ export default function Index() {
 
                       {isHabit && (
                         <div>
-                          <Label htmlFor="habit-days">Количество дней</Label>
+                          <Label htmlFor="habit-days" className="text-purple-700">Количество дней</Label>
                           <Input
                             id="habit-days"
                             type="number"
-                            value={habitDays}
-                            onChange={(e) => setHabitDays(parseInt(e.target.value) || 7)}
                             min="1"
-                            className="bg-slate-900 border-slate-700 mt-2"
+                            max="365"
+                            value={habitDays}
+                            onChange={(e) => setHabitDays(Number(e.target.value))}
+                            className="bg-purple-50 border-2 border-purple-200 mt-2"
                           />
                         </div>
                       )}
 
-                      <Button 
+                      <Button
                         onClick={addTask}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                        className="w-full bg-gradient-to-r from-pink-300 to-purple-300 hover:from-pink-400 hover:to-purple-400 text-purple-800 font-bold text-lg shadow-md"
                       >
-                        Создать
+                        ✨ Создать
                       </Button>
                     </div>
                   </DialogContent>
@@ -452,45 +458,48 @@ export default function Index() {
 
               <div className="space-y-3">
                 {regularTasks.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400">
-                    <Icon name="Inbox" size={48} className="mx-auto mb-4 opacity-50" />
-                    <p>Нет задач на выбранную дату. Добавьте первую!</p>
+                  <div className="text-center py-12 text-purple-400">
+                    <Icon name="Sparkles" size={48} className="mx-auto mb-4 opacity-50" />
+                    <p className="text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Пока нет дел. Добавь первое! 🌟</p>
                   </div>
                 ) : (
                   regularTasks.map((task) => {
                     const cat = categories[task.category];
+                    
                     return (
                       <div
                         key={task.id}
-                        className={`flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r ${cat.color} bg-opacity-10 border border-slate-700 hover:border-slate-600 transition-all duration-300 hover:scale-[1.02]`}
+                        className={`p-4 rounded-xl border-2 ${cat.border} ${cat.bg} hover:shadow-lg transition-all duration-300`}
                       >
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => toggleTask(task.id)}
-                          className={`rounded-full ${task.completed ? 'bg-green-500/20 text-green-400' : 'bg-slate-700'}`}
-                        >
-                          <Icon name={task.completed ? 'Check' : 'Circle'} size={20} />
-                        </Button>
-                        
-                        <div className="flex-1">
-                          <p className={`font-medium ${task.completed ? 'line-through opacity-60' : ''}`}>
-                            {task.title}
-                          </p>
-                          <Badge variant="outline" className={`mt-1 bg-gradient-to-r ${cat.color} border-none text-white`}>
-                            <Icon name={cat.icon as any} size={12} className="mr-1" />
-                            {cat.label}
-                          </Badge>
+                        <div className="flex items-center gap-3">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => toggleTask(task.id)}
+                            className={`rounded-full ${task.completed ? 'bg-green-200 text-green-700' : 'bg-white border-2 border-purple-300'}`}
+                          >
+                            <Icon name={task.completed ? 'Check' : 'Circle'} size={20} />
+                          </Button>
+                          
+                          <div className="flex-1">
+                            <p className={`font-medium ${cat.text} ${task.completed ? 'line-through opacity-60' : ''}`}>
+                              {task.title}
+                            </p>
+                            <Badge variant="outline" className={`mt-1 bg-gradient-to-r ${cat.color} border-none text-white`}>
+                              <Icon name={cat.icon as any} size={12} className="mr-1" />
+                              {cat.label}
+                            </Badge>
+                          </div>
+                          
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => deleteTask(task.id)}
+                            className="text-red-400 hover:text-red-600 hover:bg-red-100"
+                          >
+                            <Icon name="Trash2" size={18} />
+                          </Button>
                         </div>
-
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => deleteTask(task.id)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                        >
-                          <Icon name="Trash2" size={18} />
-                        </Button>
                       </div>
                     );
                   })
@@ -500,44 +509,44 @@ export default function Index() {
           </TabsContent>
 
           <TabsContent value="habits" className="space-y-4">
-            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
+                <h2 className="text-3xl font-bold text-blue-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="Target" size={28} />
                   Мои привычки
                 </h2>
                 <Dialog open={isHabitDialogOpen} onOpenChange={setIsHabitDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-105">
+                    <Button className="bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 shadow-md">
                       <Icon name="Plus" size={20} className="mr-2" />
                       Новая привычка
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-slate-800 border-slate-700 max-w-md">
+                  <DialogContent className="bg-white border-2 border-blue-200 shadow-2xl max-w-md">
                     <DialogHeader>
-                      <DialogTitle className="text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      <DialogTitle className="text-3xl text-blue-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
                         Создать привычку
                       </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 mt-4">
                       <div>
-                        <Label htmlFor="habit-title">Название привычки</Label>
+                        <Label htmlFor="habit-title" className="text-purple-700">Название привычки</Label>
                         <Input
                           id="habit-title"
                           value={newTaskTitle}
                           onChange={(e) => setNewTaskTitle(e.target.value)}
-                          placeholder="Например: Утренняя зарядка"
-                          className="bg-slate-900 border-slate-700 mt-2"
+                          placeholder="Например: Утренняя зарядка 💪"
+                          className="bg-blue-50 border-2 border-blue-200 mt-2"
                         />
                       </div>
                       
                       <div>
-                        <Label>Категория</Label>
+                        <Label className="text-purple-700">Категория</Label>
                         <Select value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as Category)}>
-                          <SelectTrigger className="bg-slate-900 border-slate-700 mt-2">
+                          <SelectTrigger className="bg-blue-50 border-2 border-blue-200 mt-2">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-slate-800 border-slate-700">
+                          <SelectContent className="bg-white border-2 border-blue-200">
                             {Object.entries(categories).map(([key, cat]) => (
                               <SelectItem key={key} value={key}>
                                 <div className="flex items-center gap-2">
@@ -551,8 +560,8 @@ export default function Index() {
                       </div>
 
                       <div>
-                        <Label>Дата начала</Label>
-                        <div className="mt-2 flex justify-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+                        <Label className="text-purple-700">Дата начала</Label>
+                        <div className="mt-2 flex justify-center p-3 bg-blue-50 rounded-lg border-2 border-blue-200">
                           <Calendar
                             mode="single"
                             selected={habitStartDate}
@@ -563,7 +572,7 @@ export default function Index() {
                       </div>
 
                       <div>
-                        <Label htmlFor="habit-days">Количество дней</Label>
+                        <Label htmlFor="habit-days" className="text-purple-700">Количество дней</Label>
                         <Input
                           id="habit-days"
                           type="number"
@@ -571,18 +580,18 @@ export default function Index() {
                           max="365"
                           value={habitDays}
                           onChange={(e) => setHabitDays(Number(e.target.value))}
-                          className="bg-slate-900 border-slate-700 mt-2"
+                          className="bg-blue-50 border-2 border-blue-200 mt-2"
                         />
-                        <p className="text-xs text-slate-400 mt-1">
+                        <p className="text-xs text-purple-500 mt-1">
                           Привычка будет создана на {habitDays} {habitDays === 1 ? 'день' : habitDays < 5 ? 'дня' : 'дней'} начиная с {formatDate(habitStartDate)}
                         </p>
                       </div>
 
                       <Button
                         onClick={addHabit}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                        className="w-full bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 font-bold text-lg shadow-md"
                       >
-                        Создать привычку
+                        ✨ Создать привычку
                       </Button>
                     </div>
                   </DialogContent>
@@ -591,9 +600,9 @@ export default function Index() {
               
               <div className="space-y-4">
                 {habits.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400">
+                  <div className="text-center py-12 text-blue-400">
                     <Icon name="Calendar" size={48} className="mx-auto mb-4 opacity-50" />
-                    <p>Нет привычек на выбранную дату. Создайте первую в трекере дел!</p>
+                    <p className="text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Нет привычек на выбранную дату 📅</p>
                   </div>
                 ) : (
                   habits.map((habit) => {
@@ -603,11 +612,11 @@ export default function Index() {
                     return (
                       <div
                         key={habit.id}
-                        className={`p-6 rounded-2xl bg-gradient-to-br ${cat.color} bg-opacity-10 border border-slate-700 hover:border-slate-600 transition-all duration-300 hover:scale-[1.02]`}
+                        className={`p-6 rounded-2xl border-2 ${cat.border} ${cat.bg} hover:shadow-xl transition-all duration-300`}
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex-1">
-                            <h3 className="text-xl font-semibold mb-2">{habit.title}</h3>
+                            <h3 className={`text-xl font-semibold mb-2 ${cat.text}`}>{habit.title}</h3>
                             <Badge variant="outline" className={`bg-gradient-to-r ${cat.color} border-none text-white`}>
                               <Icon name={cat.icon as any} size={12} className="mr-1" />
                               {cat.label}
@@ -617,7 +626,7 @@ export default function Index() {
                             size="icon"
                             variant="ghost"
                             onClick={() => deleteTask(habit.id)}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                            className="text-red-400 hover:text-red-600 hover:bg-red-100"
                           >
                             <Icon name="Trash2" size={18} />
                           </Button>
@@ -625,31 +634,31 @@ export default function Index() {
 
                         <div className="space-y-3">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-slate-300">Прогресс</span>
-                            <span className="font-bold text-lg">
+                            <span className="text-purple-600 font-medium">Прогресс</span>
+                            <span className="font-bold text-lg text-purple-700">
                               {habit.streak}/{habit.daysTotal} дней
                             </span>
                           </div>
-                          <Progress value={progressPercent} className="h-2 bg-slate-700" />
+                          <Progress value={progressPercent} className="h-2 bg-purple-200" />
                           
                           <div className="flex items-center gap-2 mt-4">
                             <Button
                               onClick={() => toggleTask(habit.id)}
                               className={`flex-1 ${
                                 habit.completed 
-                                  ? 'bg-green-600 hover:bg-green-700' 
-                                  : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 animate-pulse-glow'
+                                  ? 'bg-green-300 hover:bg-green-400 text-green-800' 
+                                  : 'bg-gradient-to-r from-blue-300 to-cyan-300 hover:from-blue-400 hover:to-cyan-400 text-blue-800 shadow-md'
                               }`}
                             >
                               <Icon name={habit.completed ? 'CheckCircle2' : 'Circle'} size={18} className="mr-2" />
-                              {habit.completed ? 'Выполнено сегодня' : 'Отметить выполнение'}
+                              {habit.completed ? 'Выполнено сегодня ✓' : 'Отметить выполнение'}
                             </Button>
                           </div>
                         </div>
 
                         {habit.streak && habit.streak >= 3 && (
-                          <div className="mt-4 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/30 text-center">
-                            <p className="text-yellow-300 font-medium">
+                          <div className="mt-4 p-3 bg-yellow-100 rounded-lg border-2 border-yellow-200 text-center">
+                            <p className="text-yellow-700 font-medium">
                               🔥 Серия: {habit.streak} {habit.streak === 1 ? 'день' : habit.streak < 5 ? 'дня' : 'дней'}!
                             </p>
                           </div>
@@ -663,56 +672,56 @@ export default function Index() {
           </TabsContent>
 
           <TabsContent value="lifewheel" className="space-y-4">
-            <Card className="p-6 bg-slate-800/40 backdrop-blur-sm border-slate-700 animate-scale-in">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl animate-scale-in">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
+                <h2 className="text-3xl font-bold text-purple-600 flex items-center gap-2" style={{fontFamily: 'Patrick Hand, cursive'}}>
                   <Icon name="Target" size={28} />
-                  Колесо жизненного баланса
+                  Колесо жизненного баланса 🌈
                 </h2>
                 <div className="flex gap-2">
                   <Button
                     onClick={saveMonthlySnapshot}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    className="bg-gradient-to-r from-green-300 to-emerald-300 hover:from-green-400 hover:to-emerald-400 text-green-800 shadow-md"
                   >
                     <Icon name="Save" size={18} className="mr-2" />
-                    Сохранить анализ
+                    Сохранить
                   </Button>
                   <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        className="border-slate-600 hover:bg-slate-700"
+                        className="border-2 border-purple-300 text-purple-700 hover:bg-purple-100"
                       >
                         <Icon name="History" size={18} className="mr-2" />
                         История
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-slate-800 border-slate-700 max-w-3xl max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="bg-white border-2 border-purple-200 shadow-2xl max-w-3xl max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
-                        <DialogTitle className="text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                          История колеса баланса
+                        <DialogTitle className="text-3xl text-purple-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
+                          История колеса баланса 📖
                         </DialogTitle>
                       </DialogHeader>
                       <div className="space-y-6 mt-4">
                         {monthlyHistory.length === 0 ? (
-                          <div className="text-center py-8 text-slate-400">
+                          <div className="text-center py-8 text-purple-400">
                             <Icon name="Calendar" size={48} className="mx-auto mb-4 opacity-50" />
-                            <p>Нет сохранённых снимков. Сохраните текущее состояние кнопкой "Сохранить анализ"</p>
+                            <p style={{fontFamily: 'Patrick Hand, cursive'}}>Нет сохранённых снимков 📅</p>
                           </div>
                         ) : (
                           monthlyHistory.map((snapshot, idx) => (
-                            <Card key={idx} className="p-4 bg-slate-900 border-slate-700">
-                              <h3 className="text-xl font-bold mb-4 text-purple-400">{snapshot.month}</h3>
+                            <Card key={idx} className="p-4 bg-purple-50 border-2 border-purple-200">
+                              <h3 className="text-2xl font-bold mb-4 text-purple-600" style={{fontFamily: 'Patrick Hand, cursive'}}>{snapshot.month}</h3>
                               <div className="grid grid-cols-2 gap-3">
                                 {(Object.entries(snapshot.areas) as [Category, number][]).map(([cat, score]) => {
                                   const catData = categories[cat];
                                   return (
-                                    <div key={cat} className="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                                    <div key={cat} className={`flex items-center justify-between p-3 ${catData.bg} rounded-lg border-2 ${catData.border}`}>
                                       <div className="flex items-center gap-2">
-                                        <Icon name={catData.icon as any} size={18} />
-                                        <span className="text-sm">{catData.label}</span>
+                                        <Icon name={catData.icon as any} size={18} className={catData.text} />
+                                        <span className={`text-sm ${catData.text}`}>{catData.label}</span>
                                       </div>
-                                      <span className="text-xl font-bold">{score}/10</span>
+                                      <span className={`text-xl font-bold ${catData.text}`}>{score}/10</span>
                                     </div>
                                   );
                                 })}
@@ -727,7 +736,7 @@ export default function Index() {
               </div>
 
               <div className="grid lg:grid-cols-2 gap-6">
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border-2 border-purple-200">
                   <svg width="400" height="400" viewBox="0 0 400 400" className="max-w-full">
                     {(() => {
                       const centerX = 200;
@@ -747,8 +756,8 @@ export default function Index() {
                             cy={centerY}
                             r={radius}
                             fill="none"
-                            stroke="rgba(148, 163, 184, 0.2)"
-                            strokeWidth="1"
+                            stroke="rgba(216, 180, 254, 0.3)"
+                            strokeWidth="2"
                           />
                         );
                       }
@@ -765,8 +774,8 @@ export default function Index() {
                             y1={centerY}
                             x2={endX}
                             y2={endY}
-                            stroke="rgba(148, 163, 184, 0.2)"
-                            strokeWidth="1"
+                            stroke="rgba(216, 180, 254, 0.3)"
+                            strokeWidth="2"
                           />
                         );
                       });
@@ -801,9 +810,10 @@ export default function Index() {
                             x={x}
                             y={y}
                             textAnchor="middle"
-                            fill="#94a3b8"
-                            fontSize="12"
-                            fontWeight="500"
+                            fill="#9333ea"
+                            fontSize="14"
+                            fontWeight="600"
+                            fontFamily="Patrick Hand, cursive"
                           >
                             {categories[cat].label}
                           </text>
@@ -816,9 +826,9 @@ export default function Index() {
                           {gridLines}
                           <path
                             d={pathData}
-                            fill="rgba(168, 85, 247, 0.3)"
+                            fill="rgba(216, 180, 254, 0.4)"
                             stroke="rgba(168, 85, 247, 0.8)"
-                            strokeWidth="2"
+                            strokeWidth="3"
                           />
                           {labels}
                         </>
@@ -827,20 +837,20 @@ export default function Index() {
                   </svg>
                   
                   <div className="mt-6 text-center">
-                    <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400" style={{fontFamily: 'Caveat, cursive'}}>
                       {(() => {
                         const scores = getCategoryScores();
                         const avg = Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length;
                         return avg.toFixed(1);
                       })()}
                     </div>
-                    <div className="text-slate-400 mt-2">Средний балл</div>
+                    <div className="text-purple-600 mt-2 text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Средний балл ⭐</div>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div>
-                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl border-2 border-blue-200">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
                       <Icon name="BarChart3" size={24} />
                       Оценка по категориям
                     </h3>
@@ -848,16 +858,16 @@ export default function Index() {
                       {(Object.entries(getCategoryScores()) as [Category, number][]).map(([cat, score]) => {
                         const catData = categories[cat];
                         return (
-                          <div key={cat} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                          <div key={cat} className={`flex items-center justify-between p-4 ${catData.bg} rounded-xl border-2 ${catData.border}`}>
                             <div className="flex items-center gap-3">
-                              <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color} bg-opacity-20`}>
-                                <Icon name={catData.icon as any} size={20} />
+                              <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color}`}>
+                                <Icon name={catData.icon as any} size={20} className="text-white" />
                               </div>
-                              <span className="font-medium">{catData.label}</span>
+                              <span className={`font-medium ${catData.text}`}>{catData.label}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Progress value={score * 10} className="w-24 h-2" />
-                              <span className="text-2xl font-bold w-12 text-right">{score}</span>
+                              <span className={`text-2xl font-bold w-12 text-right ${catData.text}`}>{score}</span>
                             </div>
                           </div>
                         );
@@ -865,33 +875,33 @@ export default function Index() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/30 p-4">
-                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-orange-400">
+                  <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border-2 border-orange-200 p-6">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-orange-600" style={{fontFamily: 'Patrick Hand, cursive'}}>
                       <Icon name="AlertTriangle" size={24} />
-                      Рекомендации
+                      Рекомендации 💡
                     </h3>
                     <div className="space-y-3">
                       {getRecommendations().length === 0 ? (
-                        <div className="text-center py-4 text-slate-300">
-                          <Icon name="CheckCircle" size={32} className="mx-auto mb-2 text-green-400" />
-                          <p className="font-medium">Отличный баланс!</p>
-                          <p className="text-sm text-slate-400 mt-1">Все сферы жизни в гармонии</p>
+                        <div className="text-center py-4 text-green-700">
+                          <Icon name="CheckCircle" size={32} className="mx-auto mb-2 text-green-500" />
+                          <p className="font-medium text-lg" style={{fontFamily: 'Patrick Hand, cursive'}}>Отличный баланс! 🎉</p>
+                          <p className="text-sm text-green-600 mt-1">Все сферы жизни в гармонии</p>
                         </div>
                       ) : (
                         getRecommendations().map((rec) => {
                           const catData = categories[rec.category];
                           return (
-                            <div key={rec.category} className="p-3 bg-slate-900/50 rounded-lg border border-slate-700">
+                            <div key={rec.category} className={`p-3 ${catData.bg} rounded-xl border-2 ${catData.border}`}>
                               <div className="flex items-start gap-3">
-                                <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color} bg-opacity-20 mt-1`}>
-                                  <Icon name={catData.icon as any} size={18} />
+                                <div className={`p-2 rounded-lg bg-gradient-to-r ${catData.color} mt-1`}>
+                                  <Icon name={catData.icon as any} size={18} className="text-white" />
                                 </div>
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between mb-1">
-                                    <span className="font-semibold text-slate-200">{catData.label}</span>
-                                    <span className="text-orange-400 font-bold">{rec.score}/10</span>
+                                    <span className={`font-semibold ${catData.text}`}>{catData.label}</span>
+                                    <span className="text-orange-600 font-bold">{rec.score}/10</span>
                                   </div>
-                                  <p className="text-sm text-slate-300">{rec.advice}</p>
+                                  <p className="text-sm text-purple-700">{rec.advice}</p>
                                 </div>
                               </div>
                             </div>
